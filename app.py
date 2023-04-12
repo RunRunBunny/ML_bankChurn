@@ -22,16 +22,11 @@ def get_name(name: str):
     return {'Welcome To BankChurn Prediction System': f'{name}'}
 
 # 3. Expose the prediction functionality, make a prediction from the passed
-#    JSON data and return the predicted Bank Note with the confidence
+#    JSON data and return the predicted Bank Churn with the confidence
 @app.post('/predict')
-def predict_banknote(data:userInfo):
+def predict_bankChurn(data:userInfo):
     data = data.dict()
     data['NewAGT'] = data['age'] - data['tenure']
-    # data['CreditsScore'] = pd.qcut(data['creditscore'], 10, labels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
-    # data['AgeScore'] = pd.qcut(data['age'], 8, labels = [1, 2, 3, 4, 5, 6, 7, 8])
-    # data['BalanceScore'] = pd.qcut(data['balance'].rank(method="first"), 10, labels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
-    # data['EstSalaryScore'] = pd.qcut(data['estimatedsalary'], 10, labels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
-    # data["NewEstimatedSalary"] = data['estimatedsalary'] / 12 
     cat_variables = ["geography_Germany", "geography_Spain", "gender_Male", "hascrcard","isactivemember"]
     con_variables = ['creditscore', 'age', 'tenure', 'balance', 'numofproducts', 'estimatedsalary',	'NewAGT']
     cat_dict = {}
