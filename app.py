@@ -25,7 +25,8 @@ def get_name(name: str):
 #    JSON data and return the predicted Bank Churn with the confidence
 @app.post('/predict')
 def predict_bankChurn(data:userInfo):
-    data = data.dict()
+    # data = data.dict()
+    data = data.userInfo
     data['NewAGT'] = data['age'] - data['tenure']
     cat_variables = ["geography_Germany", "geography_Spain", "gender_Male", "hascrcard","isactivemember"]
     con_variables = ['creditscore', 'age', 'tenure', 'balance', 'numofproducts', 'estimatedsalary',	'NewAGT']

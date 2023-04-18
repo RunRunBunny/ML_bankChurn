@@ -9,7 +9,8 @@ class PretictChurn(HttpUser):
 
     @task
     def predict_bankChurn(self):
-      data = {
+      # Make the request to the API
+      response = self.client.post("/predict", json={"userInfo":{
         "creditscore": 0,
         "age": 0,
         "tenure": 0,
@@ -21,10 +22,7 @@ class PretictChurn(HttpUser):
         "gender_Male": 0,
         "hascrcard": 0,
         "isactivemember": 0
-      }
-      self.client.post("/predict", json = data)
-      # Make the request to the API
-      response = self.client.post("/predict", json=userInfo)
+      }})
 
       # Assert that the response is successful
       assert response.status_code == 200

@@ -1,14 +1,14 @@
 from fastapi.testclient import TestClient
-
 from app import app, predict_bankChurn
-from userInfo import userInfo
+import userInfo
 
 client = TestClient(app)
 
-def test_input_data(mocker):
-    data = {
+def test_bankChurn():
+    #Arrange. 
+    request_body = {"userInfo": {
         "creditscore": 0,
-        "age": 0,
+        "age": 20,
         "tenure": 0,
         "balance": 0.0,
         "numofproducts": 0,
@@ -18,9 +18,13 @@ def test_input_data(mocker):
         "gender_Male": 0,
         "hascrcard": 0,
         "isactivemember": 0
+    }}
+
+    #Act.
+    response = client.post("/predict", json=request_body)
+
+    #Assert.
+    assert response.status_code == 200
+    assert response.json() == {
+        'prediction': 'Not Churn'
     }
-
-    response = client.post("/predict", json = data)
-
-    # assert response.status_code == 200
-    # assert isinstance(response.json(), dict)
