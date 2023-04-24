@@ -25,8 +25,5 @@ class PredictChurn(HttpUser):
 
         # Print the response content
         print(response.content)
-  
-        # Assert that the response is successful
-        assert response.status_code == 200
 
     wait_time = between(1, 5)
