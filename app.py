@@ -2,7 +2,7 @@
 import uvicorn
 from fastapi import FastAPI
 from userInfo import userInfo
-import numpy as np
+from churnPred import churnPred
 import joblib
 import pandas as pd
 # 2. Create the app object
@@ -23,11 +23,13 @@ def get_name(name: str):
 
 # 3. Expose the prediction functionality, make a prediction from the passed
 #    JSON data and return the predicted Bank Churn with the confidence
-@app.post('/predict')
+@app.post('/predict', response_model= churnPred)
 def predict_bankChurn(data:userInfo):
-    # data = data.dict()
-    data = data.userInfo
+    data = data.dict()
+    # data = data.userInfo
     data['NewAGT'] = data['age'] - data['tenure']
+    data['geography_Germany'] = (data['geography'] == "Germany")
+    data['geography_Spain'] = (data['geography'] == "Spain")
     cat_variables = ["geography_Germany", "geography_Spain", "gender_Male", "hascrcard","isactivemember"]
     con_variables = ['creditscore', 'age', 'tenure', 'balance', 'numofproducts', 'estimatedsalary',	'NewAGT']
     cat_dict = {}
@@ -41,15 +43,12 @@ def predict_bankChurn(data:userInfo):
     cat_df = pd.DataFrame(cat_dict, index = [1])
     X = pd.concat([con_df,cat_df], axis = 1)
 
-    prediction = model.predict(X)
+    probability = model.predict_proba(X)[:, 1]
     
-    if(prediction == 1):
-        prediction = 'Churn'
+    if(probability > 0.5):
+        return churnPred(churn_prediction=True, churn_probability=probability, explanation="High risk of churn.")
     else:
-        prediction = 'Not Churn'
-    return {
-        'prediction': prediction
-    }
+        return churnPred(churn_prediction=False, churn_probability=probability, explanation="Low risk of churn.")
 
 # 5. Run the API with uvicorn
 #    Will run on http://127.0.0.1:8000

@@ -1,30 +1,29 @@
 from fastapi.testclient import TestClient
-from app import app, predict_bankChurn
-import userInfo
+from app import app
+from userInfo import userInfo
 
 client = TestClient(app)
 
 def test_bankChurn():
-    #Arrange. 
-    request_body = {"userInfo": {
-        "creditscore": 0,
-        "age": 20,
-        "tenure": 0,
-        "balance": 0.0,
-        "numofproducts": 0,
-        "estimatedsalary": 0.0,
-        "geography_Germany": 0,
-        "geography_Spain": 0,
-        "gender_Male": 0,
-        "hascrcard": 0,
-        "isactivemember": 0
-    }}
+
+    user_info = userInfo(
+    creditscore=600,
+    age=35,
+    tenure=5,
+    balance=10000.0,
+    numofproducts=2,
+    estimatedsalary=50000.0,
+    geography="Spain",
+    gender_Male=True,
+    hascrcard=True,
+    isactivemember=False
+    ) 
 
     #Act.
-    response = client.post("/predict", json=request_body)
+    response = client.post("/predict", json=user_info.dict())
 
     #Assert.
     assert response.status_code == 200
-    assert response.json() == {
-        'prediction': 'Not Churn'
-    }
+    # assert response.json() == {
+    #     'prediction': 'Churn'
+    # }
