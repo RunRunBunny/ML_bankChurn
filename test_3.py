@@ -7,23 +7,22 @@ client = TestClient(app)
 def test_bankChurn():
 
     user_info = userInfo(
-    creditscore=600,
-    age=35,
-    tenure=5,
-    balance=10000.0,
-    numofproducts=2,
-    estimatedsalary=50000.0,
-    geography="Spain",
-    gender_Male=True,
+    creditscore=376,
+    age=29,
+    tenure=4,
+    balance=115046.74,
+    numofproducts=4,
+    estimatedsalary=119346.88,
+    geography="Germany",
+    gender_Male=False,
     hascrcard=True,
     isactivemember=False
     ) 
 
     #Act.
     response = client.post("/predict", json=user_info.dict())
+    print(response.json()['churn_prediction'])
 
     #Assert.
     assert response.status_code == 200
-    # assert response.json() == {
-    #     'prediction': 'Churn'
-    # }
+    assert response.json()['churn_prediction'] == True

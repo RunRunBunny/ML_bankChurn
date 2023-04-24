@@ -7,15 +7,15 @@ client = TestClient(app)
 def test_bankChurn():
 
     user_info = userInfo(
-    creditscore=600,
-    age=35,
+    creditscore=549,
+    age=25,
     tenure=5,
-    balance=10000.0,
+    balance=0.0,
     numofproducts=2,
-    estimatedsalary=50000.0,
-    geography="Spain",
-    gender_Male=True,
-    hascrcard=True,
+    estimatedsalary=190857.79,
+    geography="France",
+    gender_Male=False,
+    hascrcard=False,
     isactivemember=False
     ) 
 
@@ -24,6 +24,4 @@ def test_bankChurn():
 
     #Assert.
     assert response.status_code == 200
-    # assert response.json() == {
-    #     'prediction': 'Churn'
-    # }
+    assert response.json()['churn_prediction'] == False
